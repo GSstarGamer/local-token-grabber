@@ -1,11 +1,12 @@
-import os
-import re
-import requests
-import ntpath
-from base64 import b64decode
 from win32crypt import CryptUnprotectData
 from Crypto.Cipher import AES
+from base64 import b64decode
+import subprocess
+import requests
+import ntpath
 import json
+import re
+import os
 
 appdata = os.getenv("localappdata")
 roaming = os.getenv("appdata")
@@ -43,6 +44,9 @@ encrypted_regex = r"dQw4w9WgXcQ:[^\"]*"
 def win_decrypt(encrypted_str: bytes) -> str:
     return CryptUnprotectData(encrypted_str, None, None, None, 0)[1]
 
+def copy(text):
+    process = subprocess.Popen(['clip'], stdin=subprocess.PIPE)
+    process.communicate(input=text.encode('utf-8'))
 
 def get_master_key(path: str or os.PathLike):
     if not ntpath.exists(path):
@@ -142,4 +146,20 @@ if __name__ == '__main__':
     tokens = getTokens()
     for i, token in enumerate(tokens):
         print(
-            f'{i+1}. {token["token"]} - {token["username"]} - {token["email"]}')
+            f'{i + 1}. {token["token"][0:33]}... User: {token["username"]}\n')
+    
+        choice = input("Token to copy: ")
+    
+        try:
+            choice = int(choice)
+            if 1 <= choice <= len(tokens):
+                selected_token = tokens[choice - 1]["token"]
+                
+                # Copy to clipboard using subprocess
+                copy(selected_token)
+    
+                print(f'Token {choice} copied to clipboard.')
+            else:
+                print('Invalid choice.')
+        except ValueError:
+            print('Invalid input. Please enter a number.')
