@@ -5,8 +5,9 @@ Not this will not work always (mainly client version works)
 
 # PLEASE DO NOT USE FOR ILL INTENTS 
 # IT IS AGAINST TOS ⚠️
-Good uses:
+## Good uses:
  - Getting ur token in few secs
  - making scripts with ur token, without having to copy paste it
-Bad uses:
+
+## Bad uses:
  - token grabbing others
